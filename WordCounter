@@ -1,0 +1,65 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class WordCounter {
+    public static void main(String[] args) {
+        // Prompt user for input
+        System.out.print("Enter text or provide a file path to count words: ");
+        String userInput = getUserInput();
+
+        // Split the input into an array of words
+        String[] words = splitIntoWords(userInput);
+
+        // Initialize counter for total words
+        int totalWords = words.length;
+
+        // Remove common stop words
+        words = removeStopWords(words);
+
+        // Count unique words and their frequency
+        Map<String, Long> wordFrequency = countWordFrequency(words);
+
+        // Display results
+        System.out.println("\nTotal words: " + totalWords);
+        System.out.println("Unique words: " + wordFrequency.size());
+        System.out.println("Word frequency: " + wordFrequency);
+
+        // Additional features can be added based on user needs, such as GUI or input validation.
+    }
+
+    private static String getUserInput() {
+        // Implement code to get user input either from text or file
+        // For simplicity, assume the user enters text directly
+        // In a real-world scenario, you might want to handle file input separately.
+        // You can use a Scanner for console input or a GUI for a more user-friendly interface.
+        // Here, we use a sample text.
+        return "This is a sample text. It has several words, and we will count them. This program also handles common stop words.";
+    }
+
+    private static String[] splitIntoWords(String input) {
+        // Split the string into an array of words using space or punctuation as delimiters
+        return input.split("\\s+|\\p{Punct}+");
+    }
+
+    private static String[] removeStopWords(String[] words) {
+        // List of common English stop words
+        Set<String> stopWords = new HashSet<>(Arrays.asList("the", "and", "is", "it", "has", "will", "this", "in", "we", "has"));
+
+        // Remove stop words
+        return Arrays.stream(words)
+                .filter(word -> !stopWords.contains(word.toLowerCase()))
+                .toArray(String[]::new);
+    }
+
+    private static Map<String, Long> countWordFrequency(String[] words) {
+        // Count unique words and their frequency
+        return Arrays.stream(words)
+                .collect(Collectors.groupingBy(String::toLowerCase, Collectors.counting()));
+    }
+}
